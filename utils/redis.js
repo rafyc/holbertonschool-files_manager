@@ -4,22 +4,20 @@ import util from 'util';
 class RedisClient {
   constructor() {
     this.client = createClient();
-    this.client.on('error', err => console.log('Redis Client Error', err));
+    this.client.on('error', (err) => console.log('Redis Client Error', err));
   }
 
   isAlive() {
     const status = this.client.connected;
     return status;
-  };
-
+  }
 
   async get(key) {
     const getAsync = util.promisify(this.client.get).bind(this.client);
     try {
       const value = await getAsync(key);
       return value;
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       throw err;
     }
@@ -28,8 +26,7 @@ class RedisClient {
   async set(key, val, duration) {
     try {
       const value = await this.client.set(key, val, 'EX', duration);
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       throw err;
     }
@@ -39,8 +36,7 @@ class RedisClient {
     try {
       const deletedCount = await this.client.del(key);
       console.log(`Deleted ${deletedCount} keys`);
-    }
-    catch (err) {
+    } catch (err) {
       console.log(err);
       throw err;
     }
