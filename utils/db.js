@@ -1,19 +1,19 @@
 import mongodb from 'mongodb';
 class DBClient {
   constructor() {
-    const DB_HOST = '127.0.0.1'
-    const DB_PORT = '27017'
-    const DB_DATABASE = 'files_manager';
-    const url = `mongodb://${DB_HOST}:${DB_PORT}`;
+    const host = process.env.DB_HOST || '127.0.0.1'
+    const port = process.env.DB_PORT || '27017'
+    const database = process.env.DB_DATABASE || 'files_manager';
+    const url = `mongodb://${host}:${port}`;
 
     mongodb.MongoClient.connect(url, { useUnifiedTopology: true }, (error, client) => {
-      this.db = client.db(DB_DATABASE);
+      this.db = client.db(database);
     });
   }
 
 
-  async isAlive() {
-    return this.db;
+  isAlive() {
+    return !!this.db;
   }
 
   async nbUsers() {
