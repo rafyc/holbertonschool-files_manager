@@ -5,11 +5,11 @@ class RedisClient {
   constructor() {
     this.client = createClient();
     this.client.on('error', (err) => console.log('Redis Client Error', err));
+    this.client.on('connect', () => console.log('Connected to Redis server.'));
   }
 
   isAlive() {
-    const status = this.client.connected;
-    return status;
+    return this.client.connected;
   }
 
   async get(key) {
