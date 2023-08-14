@@ -1,4 +1,4 @@
-import mongodb from 'mongodb';
+import { MongoClient } from 'mongodb';
 class DBClient {
   constructor() {
     const host = process.env.DB_HOST || '127.0.0.1';
@@ -6,14 +6,22 @@ class DBClient {
     const database = process.env.DB_DATABASE || 'files_manager';
     const url = `mongodb://${host}:${port}`;
 
-    mongodb.MongoClient.connect(url, { useUnifiedTopology: true })
-      .then((client) => {
-        this.db = client.db(database);
+    this.client = new MongoClient(url, { useUnifiedTopology: true, poolSize: 10 }); // Example pool size: 10
+    this.client.connect()
+      .then(() => {
+        this.db = this.client.db(database);
       })
       .catch((error) => {
         console.error('Error connecting to the database:', error);
       });
   }
+
+  // ... other methods ...
+
+  close() {
+    this.client.close();
+  }
+
 
   isAlive() {
     return !!this.db;
