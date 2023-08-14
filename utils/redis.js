@@ -1,47 +1,25 @@
-import { createClient } from 'redis';
-import util from 'util';
+import express from 'express';
+import AppController from '../controllers/AppController';
+import UserController from '../controllers/UsersController';
+import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FilesController';
 
-class RedisClient {
-  constructor() {
-    this.client = createClient();
-    this.client.on('error', (err) => console.log('Redis Client Error', err));
-    this.client.on('connect', () => console.log('Connected to Redis server.'));
-  }
+const router = express.Router();
 
-  isAlive() {
-    return this.client.connected;
-  }
+router.get('/status', AppController.getStatus);
+router.get('/stats', AppController.getStats);
+router.get('/connect', AuthController.getConnect);
+router.get('/disconnect', AuthController.getDisconnect);
+router.get('/users/me', UserController.getMe);
+router.get('/files/:id', FilesController.getShow);
+router.get('/files', FilesController.getIndex);
+router.get('/files/:id/data', FilesController.getFile);
 
-  async get(key) {
-    const getAsync = util.promisify(this.client.get).bind(this.client);
-    try {
-      const value = await getAsync(key);
-      return value;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  }
+router.use(express.json());
+router.post('/users', UserController.postNew);
+router.post('/files', FilesController.postUpload);
 
-  async set(key, val, duration) {
-    try {
-      await this.client.set(key, val, 'EX', duration);
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  }
+router.put('/files/:id/publish', FilesController.putPublish);
+router.put('/files/:id/unpublish', FilesController.putUnPublish);
 
-  async del(key) {
-    try {
-      const deletedCount = await this.client.del(key);
-      console.log(`Deleted ${deletedCount} keys`);
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  }
-}
-
-const redisClient = new RedisClient();
-export default redisClient;
+export default router;

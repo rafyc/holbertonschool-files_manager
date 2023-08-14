@@ -12,11 +12,9 @@ class DBClient {
         this.db = this.client.db(database);
       })
       .catch((error) => {
-        console.error('Error connecting to the database:', error);
+        console.log('Error connecting to the database:', error);
       });
   }
-
-  // ... other methods ...
 
   close() {
     this.client.close();
