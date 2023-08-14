@@ -6,10 +6,15 @@ class DBClient {
     const database = process.env.DB_DATABASE || 'files_manager';
     const url = `mongodb://${host}:${port}`;
 
-    mongodb.MongoClient.connect(url, { useUnifiedTopology: true }, (error, client) => {
-      this.db = client.db(database);
-    });
+    mongodb.MongoClient.connect(url, { useUnifiedTopology: true })
+      .then(client => {
+        this.db = client.db(database);
+      })
+      .catch(error => {
+        console.error('Error connecting to the database:', error);
+      });
   }
+
 
 
   isAlive() {
