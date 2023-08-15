@@ -1,36 +1,30 @@
 import { MongoClient } from 'mongodb';
+
 class DBClient {
   constructor() {
     const host = process.env.DB_HOST || 'localhost';
-    const port = process.env.DB_PORT || '27017';
+    const port = process.env.DB_PORT || 27017;
     const database = process.env.DB_DATABASE || 'files_manager';
-    const url = `mongodb://${host}:${port}`;
 
-    this.client = new MongoClient(url, { useUnifiedTopology: true, poolSize: 10 }); // Example pool size: 10
-    this.client.connect()
-      .then(() => {
-        this.db = this.client.db(database);
-      })
-      .catch((error) => {
-        console.log('Error connecting to the database:', error);
-      });
+    MongoClient.connect(`mongodb://${host}:${port}`, { useUnifiedTopology: true }, (err, client) => {
+      if (err) throw err;
+      this.db = client.db(database);
+    });
   }
-
-  close() {
-    this.client.close();
-  }
-
 
   isAlive() {
-    return !!this.db;
+    if (this.db) return true;
+    return false;
   }
 
   async nbUsers() {
-    return this.db.collection('users').countDocuments();
+    const count = await this.db.collection('users').countDocuments();
+    return count;
   }
 
   async nbFiles() {
-    return this.db.collection('files').countDocuments();
+    const count = await this.db.collection('files').countDocuments();
+    return count;
   }
 }
 

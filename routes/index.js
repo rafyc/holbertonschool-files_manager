@@ -3,33 +3,13 @@ import AppController from '../controllers/AppController';
 
 const router = express.Router();
 
-
-router.get('/status', async (req, res) => {
-  try {
-    const result = await AppController.getStatus();
-    res.status(200).send(result);
-  } catch (error) {
-    console.error("Error while getting status:", error);
-    res.status(500).send({
-      statusCode: 500,
-      error: "Internal Server Error",
-      message: "An error occurred while getting status."
-    });
-  }
+router.get('/status', (request, response) => {
+  AppController.getStatus(request, response);
 });
 
-router.get('/stats', async (req, res) => {
-  try {
-    const result = await AppController.getStats();
-    res.status(200).send(result);
-  } catch (error) {
-    console.error("Error while getting stats:", error);
-    res.status(500).send({
-      statusCode: 500,
-      error: "Internal Server Error",
-      message: "An error occurred while getting statistics."
-    });
-  }
+router.get('/stats', (request, response) => {
+  AppController.getStats(request, response);
 });
+
 
 module.exports = router;
