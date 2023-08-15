@@ -11,5 +11,4 @@ router.get('/stats', (request, response) => {
   AppController.getStats(request, response);
 });
 
-
 module.exports = router;
