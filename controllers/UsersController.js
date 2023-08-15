@@ -18,7 +18,7 @@ class UsersController {
     if (user) {
       return res.status(400).send({ error: 'Already exist' })
     }
-    return res.status(201).send(newUser.insertedId, email);
+    return res.status(201).send({ id: newUser.insertedId, email });
   }
 }
 
