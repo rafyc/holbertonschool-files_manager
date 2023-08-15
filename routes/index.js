@@ -11,4 +11,8 @@ router.get('/stats', (request, response) => {
   AppController.getStats(request, response);
 });
 
+router.post('/users', (request, response) => {
+  UsersController.postNew(request, response);
+});
+
 module.exports = router;
