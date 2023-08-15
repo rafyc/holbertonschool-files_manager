@@ -2,7 +2,7 @@ import dbClient from '../utils/db';
 import sha1 from 'sha1';
 
 class UsersController {
-  static async newUser(req, res) {
+  static async postNew(req, res) {
     const { email, password } = req.body;
     const user = dbClient.db.collection('users').findOne({ email });
     const hashedPassword = sha1(password);
