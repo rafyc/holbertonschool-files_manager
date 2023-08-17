@@ -21,9 +21,9 @@ router.get('/users/me', (request, response) => {
   UserController.getMe(request, response);
 });
 
-router.get('/connect', (request, response) => {
-  UsersController.getConnect(request, response);
-});
+// router.get('/connect', (request, response) => {
+//   UsersController.getConnect(request, response);
+// });
 
 router.post('/users', (request, response) => {
   UsersController.postNew(request, response);
