@@ -14,13 +14,15 @@ class UsersController {
       console.log('no pass');
       return res.status(400).send({ error: 'Missing password' })
     }
-    const hashedPassword = sha1(password);
-    const newUser = await dbClient.db.collection('users').insertOne({ email, pasword: hashedPassword })
-
     if (user) {
       return res.status(400).send({ error: 'Already exist' })
     }
-    return res.status(201).send({ id: newUser.insertedId, email });
+
+    const hashedPassword = sha1(password);
+    const newUser = await dbClient.db.collection('users').insertOne({ email, pasword: hashedPassword });
+    const id = newUser.insertedId;
+
+    return res.status(201).send({ id, email });
   }
 }
 
