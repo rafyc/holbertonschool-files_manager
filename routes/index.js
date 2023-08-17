@@ -22,7 +22,7 @@ router.get('/users/me', (request, response) => {
 });
 
 router.get('/connect', (request, response) => {
-  UsersController.postNew(request, response);
+  UsersController.getConnect(request, response);
 });
 
 router.post('/users', (request, response) => {
