@@ -3,7 +3,8 @@ import dbClient from '../utils/db';
 
 class UsersController {
   static async postNew(req, res) {
-    const { email, password } = req.body;
+    const { email } = req.body;
+    const { password } = req.body;
     const user = await dbClient.db.collection('users').findOne({ email });
 
     if (!email) {
