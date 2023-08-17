@@ -1,5 +1,5 @@
-import dbClient from '../utils/db';
 import sha1 from 'sha1';
+import dbClient from '../utils/db';
 
 class UsersController {
   static async postNew(req, res) {
@@ -13,7 +13,6 @@ class UsersController {
       return res.status(400).send({ error: 'Missing password' });
     }
     if (user) {
-      console.log('lolo');
       return res.status(400).send({ error: 'Already exist' });
     }
     const hashedPassword = sha1(password);
