@@ -10,12 +10,12 @@ router.get('/status', (request, response) => {
 });
 
 router.get('/stats', (request, response) => {
-  AuthController.getConnect.getStats(request, response);
+  AppController.getStats(request, response);
 });
 
-router.get('/disconnect', (request, response) => {
-  AuthController.getDisconnect(request, response);
-});
+// router.get('/disconnect', (request, response) => {
+//   AuthController.getDisconnect(request, response);
+// });
 
 // router.get('/users/me', (request, response) => {
 //   UserController.getMe(request, response);
