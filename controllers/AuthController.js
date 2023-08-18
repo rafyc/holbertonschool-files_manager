@@ -38,7 +38,7 @@ class AuthController {
       return response.status(401).send({ error: 'Unauthorized' });
     }
     await redisClient.del(key)
-    return res.status(204)
+    return res.status(204).send()
 
   }
 }
