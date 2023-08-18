@@ -21,10 +21,10 @@ class AuthController {
     const token = uuidv4();
     const key = 'auth_' + token;
     const duration = 86400
-    const userId = user._id;
+    const userId = user._id.toString();
     //store user
     await redisClient.set(key, userId, duration);
-    return res.status(200).send({ "token": "155342df-2399-41da-9e8c-458b6ac52a0c" })
+    return res.status(200).send({ token })
   }
 
   static async getDisconnect(req, res) {
