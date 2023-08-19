@@ -69,7 +69,7 @@ class FilesController {
     const path = process.env.FOLDER_PATH || '/tmp/files_manager';
     const folderName = `${path}/${uuidv4()}`;
     if (!fs.existsSync(path)) {
-      fs.mkdirSync(path, { recurisve: true });
+      fs.mkdirSync(path, { recursive: true });
     }
     const content = Buffer.from(data, 'base64').toString('utf-8');
     fs.writeFileSync(folderName, content);
