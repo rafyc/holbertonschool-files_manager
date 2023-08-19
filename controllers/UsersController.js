@@ -27,12 +27,15 @@ class UsersController {
 
   static async getMe(req, res) {
     const token = req.headers['x-token'];
+    if (!token) {
+      return res.status(401).send({ error: 'Unauthorized' });
+    }
     const key = `'auth_'${token}`;
     const userId = await redisClient.get(key);
     if (!userId) {
       return res.status(401).send({ error: 'Unauthorized' });
-    };
-    const user = await dbClient.db.collection('users').findOne({ _id: ObjectId(userId) })
+    }
+    const user = await dbClient.db.collection('users').findOne({ _id: ObjectId(userId) });
     if (!user) {
       return res.status(401).send({ error: 'Unauthorized' });
     }
