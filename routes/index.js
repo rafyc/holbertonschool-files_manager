@@ -32,6 +32,6 @@ router.post('/users', (request, response) => {
 
 router.post('/files', (request, response) => {
   FilesController.postUpload(request, response);
-})
+});
 
 export default router;
