@@ -62,8 +62,8 @@ class FilesController {
 
     if (type === 'folder') {
       const { insertedId } = await dbClient.db.collection('files').insertOne({
-        // id, name, type, isPublic, parentId: parentId === 0 ? parentId : ObjectId(parentId),
-        id, name, type, isPublic, parentId
+        id, name, type, isPublic, parentId: parentId === 0 ? parentId : ObjectId(parentId),
+        // id, name, type, isPublic, parentId
       });
       return res.status(201).send({ id: insertedId, ...newFile });
     }
