@@ -27,8 +27,10 @@ class FilesController {
     const parentId = req.body.parentId || 0;
     const isPublic = req.body.isPublic || false;
     let data = ''
-    type === 'file' || type === 'image' ? data = req.body.data : null
-    if (!data) return res.status(400).send({ error: 'Missing data' });
+    if (type === 'file' || type === 'image') {
+      data = request.body.data;
+      if (!data) return response.status(400).send({ error: 'Missing data' });
+    }
 
     if (!name) {
       return res.status(400).send({ error: 'Missing name' });
