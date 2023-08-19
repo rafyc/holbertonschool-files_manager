@@ -28,7 +28,7 @@ class FilesController {
     const isPublic = req.body.isPublic || false;
     let data = ''
     if (type === 'file' || type === 'image') {
-      data = request.body.data;
+      data = req.body.data;
       if (!data) return response.status(400).send({ error: 'Missing data' });
     }
 
