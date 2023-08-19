@@ -20,31 +20,31 @@ class FilesController {
     }
     const user = await dbClient.db.collection('users').findOne({ _id: ObjectId(userId) });
     if (!user) {
-      return response.status(401).send({ error: 'Unauthorized' });
+      return res.status(401).send({ error: 'Unauthorized' });
     }
 
     const { name, type } = req.body;
-    const parentId = request.body.parentId || 0;
-    const isPublic = request.body.isPublic || false;
+    const parentId = req.body.parentId || 0;
+    const isPublic = req.body.isPublic || false;
     type === 'file' || type === 'image' ? data = req.body.data : null
-    if (!data) return response.status(400).send({ error: 'Missing data' });
+    if (!data) return res.status(400).send({ error: 'Missing data' });
 
     if (!name) {
-      return response.status(400).send({ error: 'Missing name' });
+      return res.status(400).send({ error: 'Missing name' });
     }
 
     const typeOfType = ['folder', 'file', 'image'];
     if (!type || !typeOfType.includes(type)) {
-      return response.status(400).send({ error: 'Missing type' });
+      return res.status(400).send({ error: 'Missing type' });
     }
 
     if (parentId) {
       const file = await dbClient.db.collection('files').findOne({ _id: ObjectId(parentId) });
       if (!file) {
-        return response.status(400).send({ error: 'Parent not found' });
+        return res.status(400).send({ error: 'Parent not found' });
       }
       if (file.type !== 'folder') {
-        return response.status(400).send({ error: 'Parent is not a folder' });
+        return res.status(400).send({ error: 'Parent is not a folder' });
       }
     }
 
@@ -62,7 +62,7 @@ class FilesController {
         // id, name, type, isPublic, parentId: parentId === 0 ? parentId : ObjectId(parentId),
         id, name, type, isPublic, parentId
       });
-      return response.status(201).send({ id: insertedId, ...newFile });
+      return res.status(201).send({ id: insertedId, ...newFile });
     }
 
     const path = process.env.FOLDER_PATH || '/tmp/files_manager';
@@ -77,7 +77,7 @@ class FilesController {
       id, name, type, parentId, isPublic, localPath: folderName,
     });
 
-    return response.status(201).send({
+    return res.status(201).send({
       id: insertedId, userId, name, type, isPublic, parentId,
     });
   }
