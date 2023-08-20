@@ -69,5 +69,45 @@ class FilesController {
       id: newFile.insertedId, userId, name, type, isPublic, parentId,
     });
   }
+
+  static async getShow(request, response) {
+    const user = await getUserByToken(request, response);
+    if (!user) {
+      return response.status(401).send({ error: 'Unauthorized' });
+    }
+    const userId = user._id;
+    const { id } = request.param;
+    const file = await dbClient.db.collection('files').findOne({ _id: ObjectId(id), userId });
+    if (!file) {
+      return response.status(404).send({ error: 'Not found' });
+    }
+    return response.status(200).send({
+      ...file,
+      id: file._id,
+    });
+  }
+
+  static async getIndex(request, response) {
+    console.log('lolo');
+    const user = await getUserByToken(request, response);
+    if (!user) {
+      return response.status(401).send({ error: 'Unauthorized' });
+    }
+    const { parentId = '0', page = '0' } = request.query;
+    const parsedParentId = parseInt(parentId, 10);
+
+
+    let match;
+    if (parsedParentId === 0) {
+      match = {};
+    } else {
+      match = { parentId: ObjectId(parsedParentId) }
+    }
+    const aggData = [{ $match: match }, { $skip: page * 20 }, { $limit: 20 }];
+    const pageFiles = await dbClient.db.collection('files').aggregate(aggData).toArray();
+    const files = pageFiles.map((file) => ({ ...file }));
+    return response.status(200).send(files);
+  }
 }
+
 export default FilesController;
