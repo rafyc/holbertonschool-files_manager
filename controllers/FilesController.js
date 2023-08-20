@@ -88,24 +88,34 @@ class FilesController {
   }
 
   static async getIndex(request, response) {
-    console.log('lolo');
     const user = await getUserByToken(request, response);
     if (!user) {
       return response.status(401).send({ error: 'Unauthorized' });
     }
-    const { parentId = '0', page = '0' } = request.query;
-    const parsedParentId = parseInt(parentId, 10);
-
-
+    const parent = request.query.parentId || 0;
     let match;
-    if (parsedParentId === 0) {
+    if (parent === 0) {
       match = {};
     } else {
-      match = { parentId: ObjectId(parsedParentId) }
+      match = { parentId: parent === '0' ? Number(parent) : ObjectId(parent) };
     }
+    const page = request.query.page || 0;
+
     const aggData = [{ $match: match }, { $skip: page * 20 }, { $limit: 20 }];
-    const pageFiles = await dbClient.db.collection('files').aggregate(aggData).toArray();
-    const files = pageFiles.map((file) => ({ ...file }));
+
+    const pageFiles = await dbClient.db.collection('files').aggregate(aggData);
+    const files = [];
+    await pageFiles.forEach((file) => {
+      const fileObj = {
+        id: file._id,
+        userId: file.userId,
+        name: file.name,
+        type: file.type,
+        isPublic: file.isPublic,
+        parentId: file.parentId,
+      };
+      files.push(fileObj);
+    });
     return response.status(200).send(files);
   }
 }
